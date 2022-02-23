@@ -13,7 +13,7 @@ mp_hands = mp.solutions.hands
 folders = os.listdir('./../dataset_images')
 IMAGE_FILES = {}
 for folder in folders:
-    IMAGE_FILES[folder] = [str(x) for x in Path('./../dataset_images/' + folder).glob("**/*.jpg")]
+    IMAGE_FILES[folder] = [str(x) for x in Path('./../dataset_images/' + folder).glob("**/*.*")]
 #print(IMAGE_FILES)
 
 
@@ -35,7 +35,7 @@ with mp_hands.Hands(
             # Print handedness and draw hand landmarks on the image.
             #print('Handedness:', results.multi_handedness)
             if not results.multi_hand_landmarks:
-                #print(file)
+                print(file)
                 continue
 
             image_height, image_width, _ = image.shape
@@ -51,5 +51,5 @@ with mp_hands.Hands(
                     #print(land_mark,hand_landmarks.landmark[mp_hands.HandLandmark[land_mark]].x,hand_landmarks.landmark[mp_hands.HandLandmark[land_mark]].y)
                 data.loc[len(data.index)] = row
 
-print(data)
+#print(data)
 data.to_csv('data.csv')
