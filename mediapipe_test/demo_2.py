@@ -10,7 +10,7 @@ def main():
     cod_y = ""
     action = ""
 
-    classes = {0:'left_click',1:'right_click',2:'pointer',3:'hold_drag'}
+    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag'}
 
     pTime = 0
     cTime = 0
