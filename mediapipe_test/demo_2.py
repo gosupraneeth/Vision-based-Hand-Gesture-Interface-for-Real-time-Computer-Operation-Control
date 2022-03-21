@@ -38,7 +38,7 @@ def main():
         row = []
 
         if not results.multi_hand_landmarks:
-            print(1)
+            #print(1)
             continue
                 
         for hand_landmarks in results.multi_hand_landmarks:
@@ -85,6 +85,14 @@ def main():
 
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
                 img = cv2.flip(img, 1)
+
+        if (predict_action == 'hold_drag') :
+            pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+        elif (predict_action == 'left_click'):
+            pyautogui.click()
+        elif (predict_action == 'right_click'):
+            #pyautogui.click(button= 'right')
+            pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
 
         pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
         

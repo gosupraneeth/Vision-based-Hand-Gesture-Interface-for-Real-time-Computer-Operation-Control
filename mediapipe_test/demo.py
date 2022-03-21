@@ -36,7 +36,7 @@ def main():
         row = []
 
         if not results.multi_hand_landmarks:
-            print(1)
+            #print(1)
             continue
 
         for hand_landmarks in results.multi_hand_landmarks:
@@ -51,6 +51,7 @@ def main():
         inp_row.append(row)
         pred_action = loaded_model.predict(inp_row)
         predict_action = classes[np.argmax(pred_action)]
+        score = str(np.max(pred_action))
         print(predict_action)
 
 
@@ -68,6 +69,7 @@ def main():
                 cod += " y: " + str(y_cod)
                 cv2.putText(img,cod, (10,100), cv2.FONT_HERSHEY_PLAIN, 2, (255,0,255), 3)
                 cv2.putText(img,predict_action, (10,200), cv2.FONT_HERSHEY_PLAIN, 2, (255,0,255), 3)
+                cv2.putText(img,score, (10,300), cv2.FONT_HERSHEY_PLAIN, 2, (255,255,0), 3)
 
                 for id, lm in enumerate(handLms.landmark):
                     #print(id,lm)
