@@ -11,7 +11,7 @@ def main():
     cod_y = ""
     action = ""
 
-    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag'}
+    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag',4:'left_dbl_click',5:'scrolldown',6:'scrollup'}
 
     pTime = 0
     cTime = 0
@@ -24,7 +24,7 @@ def main():
 
     mpDraw = mp.solutions.drawing_utils
     landmarks = ["WRIST","THUMB_CMC","THUMB_MCP","THUMB_IP","THUMB_TIP","INDEX_FINGER_MCP","INDEX_FINGER_PIP","INDEX_FINGER_DIP","INDEX_FINGER_TIP","MIDDLE_FINGER_MCP","MIDDLE_FINGER_PIP","MIDDLE_FINGER_DIP","MIDDLE_FINGER_TIP","RING_FINGER_MCP","RING_FINGER_PIP","RING_FINGER_DIP","RING_FINGER_TIP","PINKY_MCP","PINKY_PIP","PINKY_DIP","PINKY_TIP"]
-    loaded_model = keras.models.load_model('./../models/DL_model.h5')
+    loaded_model = keras.models.load_model('./../models/DL_model_2.h5')
     screenWidth, screenHeight = pyautogui.size()
     #from tensorflow import keras
     #loaded_model = keras.models.load_model('./../models/DL_model.h5')
@@ -88,11 +88,23 @@ def main():
 
         if (predict_action == 'hold_drag') :
             pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+
         elif (predict_action == 'left_click'):
-            pyautogui.click()
+            pyautogui.click(button="left")
+
         elif (predict_action == 'right_click'):
-            #pyautogui.click(button= 'right')
-            pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+            pyautogui.click(button= 'right')
+
+        elif predict_action == 'left_dbl_click':
+            pyautogui.doubleClick(button = "left")
+
+        elif predict_action == 'scrollup':
+            pyautogui.scroll(100)
+
+        elif predict_action == 'scrolldown':
+            pyautogui.scroll(-100)
+
+            #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
 
         pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
         
