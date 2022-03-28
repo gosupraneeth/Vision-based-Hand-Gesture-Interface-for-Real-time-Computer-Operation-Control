@@ -10,7 +10,7 @@ def main():
     cod_y = ""
     action = ""
 
-    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag'}
+    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag',4:'left_dbl_click',5:'scrolldown',6:'scrollup'}
 
     pTime = 0
     cTime = 0
@@ -24,8 +24,9 @@ def main():
     mpDraw = mp.solutions.drawing_utils
     landmarks = ["WRIST","THUMB_CMC","THUMB_MCP","THUMB_IP","THUMB_TIP","INDEX_FINGER_MCP","INDEX_FINGER_PIP","INDEX_FINGER_DIP","INDEX_FINGER_TIP","MIDDLE_FINGER_MCP","MIDDLE_FINGER_PIP","MIDDLE_FINGER_DIP","MIDDLE_FINGER_TIP","RING_FINGER_MCP","RING_FINGER_PIP","RING_FINGER_DIP","RING_FINGER_TIP","PINKY_MCP","PINKY_PIP","PINKY_DIP","PINKY_TIP"]
     #loaded_model = pickle.load(open('./../models/DL_model.sav', 'rb'))
+
     from tensorflow import keras
-    loaded_model = keras.models.load_model('./../models/DL_model.h5')
+    loaded_model = keras.models.load_model('./../models/DL_model_2.h5')
 
     while True:
         success, img = cap.read()
@@ -69,8 +70,8 @@ def main():
                 cod += " y: " + str(y_cod)
                 cv2.putText(img,cod, (10,100), cv2.FONT_HERSHEY_PLAIN, 2, (255,0,255), 3)
                 cv2.putText(img,predict_action, (10,200), cv2.FONT_HERSHEY_PLAIN, 2, (255,0,255), 3)
-                cv2.putText(img,score, (10,300), cv2.FONT_HERSHEY_PLAIN, 2, (255,255,0), 3)
-
+                
+                img = cv2.flip(img, 1)
                 for id, lm in enumerate(handLms.landmark):
                     #print(id,lm)
                     h, w, c = img.shape
@@ -80,6 +81,7 @@ def main():
                     cv2.circle(img, (cx,cy), 3, (255,0,255), cv2.FILLED)
 
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+                img = cv2.flip(img, 1)
 
         
         cTime = time.time()
