@@ -10,7 +10,7 @@ def main():
     cod_y = ""
     action = ""
 
-    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag',4:'left_dbl_click',5:'scrolldown',6:'scrollup'}
+    classes = {0:'pointer',1:'left_click',2:'right_click',3:'hold_drag',4:'left_dbl_click',5:'scrolldown',6:'scrollup',7:"right_arrow",8:"left_arrow"}
 
     pTime = 0
     cTime = 0
@@ -26,7 +26,7 @@ def main():
     #loaded_model = pickle.load(open('./../models/DL_model.sav', 'rb'))
 
     from tensorflow import keras
-    loaded_model = keras.models.load_model('./../models/DL_model_2.h5')
+    loaded_model = keras.models.load_model('./../models/DL_model_3.h5')
 
     while True:
         success, img = cap.read()
