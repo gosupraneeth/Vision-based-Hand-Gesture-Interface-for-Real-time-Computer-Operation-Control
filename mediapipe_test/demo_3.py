@@ -6,6 +6,11 @@ import numpy as np
 import pyautogui
 from tensorflow import keras
 
+left_click_flag = False
+right_click_flag = False
+left_dbl_click_flag = False
+left_arrow_flag = False
+right_arrow_flag = False
 def main():
     cod_x = ""
     cod_y = ""
@@ -29,14 +34,9 @@ def main():
     #from tensorflow import keras
     #loaded_model = keras.models.load_model('./../models/DL_model.h5')
 
-    frameRxs = int(screenWidth*0.1)
-    frameRys = int(screenHeight*0.1)
-    frameRxe = int(screenWidth*0.9)
-    frameRye = int(screenHeight*0.9)
     while True:
-        success, img = cap.read()    
+        success, img = cap.read()
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        cv2.rectangle(img,(frameRxs,frameRye), (frameRxe, frameRys),(255, 0, 255), 2)
         results = hands.process(imgRGB)
         lmlist = []
 
@@ -90,30 +90,80 @@ def main():
 
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
                 img = cv2.flip(img, 1)
-        if(x_cod >= 0.3 and x_cod<=0.7) and (y_cod>=0.3 and y_cod <=0.7):
-            if (predict_action == 'hold_drag') :
-                pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
 
-            elif (predict_action == 'left_click'):
+        if (predict_action == 'hold_drag') :
+            pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+
+        elif (predict_action == 'left_click'):
+            if(left_click_flag == False):
                 pyautogui.click(button="left")
+                left_click_flag = True
+                right_click_flag = False
+                left_dbl_click_flag = False
+                left_arrow_flag = False
+                right_arrow_flag = False
 
-            elif (predict_action == 'right_click'):
+        elif (predict_action == 'right_click'):
+            if(right_click_flag == False):
                 pyautogui.click(button= 'right')
+                left_click_flag = False
+                right_click_flag = True
+                left_dbl_click_flag = False
+                left_arrow_flag = False
+                right_arrow_flag = False
 
-            elif predict_action == 'left_dbl_click':
+        elif predict_action == 'left_dbl_click':
+            if(left_dbl_click_flag == False):
                 pyautogui.doubleClick(button = "left")
+                left_click_flag = False
+                right_click_flag = False
+                left_dbl_click_flag = True
+                left_arrow_flag = False
+                right_arrow_flag = False
 
-            elif predict_action == 'scrollup':
-                pyautogui.scroll(100)
+        elif predict_action == 'scrollup':
+            pyautogui.scroll(100)
+            left_click_flag = False
+            right_click_flag = False
+            left_dbl_click_flag = False
+            left_arrow_flag = False
+            right_arrow_flag = False
 
-            elif predict_action == 'scrolldown':
-                pyautogui.scroll(-100)
+        elif predict_action == 'scrolldown':
+            pyautogui.scroll(-100)
+            left_click_flag = False
+            right_click_flag = False
+            left_dbl_click_flag = False
+            left_arrow_flag = False
+            right_arrow_flag = False
 
-                #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+        elif predict_action == 'left_arrow':
+            if(left_arrow_flag == False):
+                pyautogui.press('right')
+                left_click_flag = False
+                right_click_flag = False
+                left_dbl_click_flag = False
+                left_arrow_flag = True
+                right_arrow_flag = False
+    
+        elif predict_action == 'right_arrow':
+            if(right_arrow_flag == False):
+                pyautogui.press('left')
+                left_click_flag = False
+                right_click_flag = False
+                left_dbl_click_flag = False
+                left_arrow_flag = False
+                right_arrow_flag = True
 
-            pyautogui.moveTo((1-x_cod)*screenWidth*0.1, y_cod*screenHeight*0.1)
-        else:
-            pass
+            #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+        else :
+            pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
+            left_click_flag = False
+            right_click_flag = False
+            left_dbl_click_flag = False
+            left_arrow_flag = False
+            right_arrow_flag = False
+
         
         cTime = time.time()
         fps = 1/(cTime-pTime)
