@@ -5,6 +5,7 @@ import pickle
 import numpy as np
 import pyautogui
 from tensorflow import keras
+import handtrackingmodule as htm
 
 def main():
     cod_x = ""
@@ -28,10 +29,63 @@ def main():
     screenWidth, screenHeight = pyautogui.size()
     #from tensorflow import keras
     #loaded_model = keras.models.load_model('./../models/DL_model.h5')
+    frameR = 100 # Frame Reduction
+    smoothening = 7
 
+    plocX, plocY = 0, 0
+    clocX, clocY = 0, 0
+
+
+    wScreen, hScreen=pyautogui.size()
+    wCam, hCam = 1080, 720
+    pyautogui.FAILSAFE=False
+    cap = cv2.VideoCapture(0)
+    cap.set(3,wCam)
+    cap.set(4,hCam)
+    # folderPath = "fingerImages"
+    # myList = os.listdir(folderPath)
+    # print(myList)
+    # overLay = []
+    pTime = 0
+    cTime = 0
+    detector = htm.handDetector()
+    tipId = [4,8,12,16,20]
     while True:
         success, img = cap.read()
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = detector.findHands(img)
+        fingerList = detector.findPosition(img, draw=False)
+        #cv2.rectangle(img, (frameR, frameR), (wCam - frameR, hCam - frameR),(255, 0, 255), 2)
+        img = cv2.flip(img, 1)
+        #print(fingerList)
+        fingers = []
+        # print(fingerList)
+        if len(fingerList) != 0:
+
+            x1,y1=fingerList[8][1:]
+            x2,y2=fingerList[12][1:]
+            # print(x1,y1,x2,y2)
+
+            # Thumb
+            if fingerList[tipId[0]][1] > fingerList[tipId[0] - 1][1]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+                # 4 Fingers
+            for id in range(1, 5):
+                if fingerList[tipId[id]][2] < fingerList[tipId[id] - 2][2]:
+                    fingers.append(1)
+                else:
+                    fingers.append(0)
+
+            # <-------------------------------------DIFFERENT DIFFERENT GESTURES FOR DIFFERENT PPT FUNCTIONALITIS------------------->
+            # if fingers[0] == 0 and fingers[1] == 0 and fingers[2] == 0 and fingers[3] == 0 and fingers[4] == 0:
+            #     pyautogui.press("right")
+            # if fingers[0] == 1 and fingers[1] == 1 and fingers[2] == 1 and fingers[3] == 1 and fingers[4] == 1:
+            #     pyautogui.press("left")
+
+        print(fingers)
         results = hands.process(imgRGB)
         lmlist = []
 
@@ -56,7 +110,7 @@ def main():
         #predict_action = pred_action
         print(predict_action)
 
-        img = cv2.flip(img, 1)
+        #img = cv2.flip(img, 1)
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
                 x_cod = handLms.landmark[mpHands.HandLandmark.INDEX_FINGER_TIP].x
@@ -86,37 +140,45 @@ def main():
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
                 img = cv2.flip(img, 1)
 
-        if (predict_action == 'hold_drag') :
+        if (predict_action == 'hold_drag'  or fingers == [0,0,0,0,0]) :
             pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+            pass
 
-        elif (predict_action == 'left_click'):
+        elif (predict_action == 'left_click' or fingers == [1,1,0,0,0]):
             pyautogui.click(button="left")
+            pass
 
-        elif (predict_action == 'right_click'):
+        elif (predict_action == 'right_click' or fingers == [0,1,0,0,1]):
             pyautogui.click(button= 'right')
+            pass
 
-        elif predict_action == 'left_dbl_click':
+        elif (predict_action == 'left_dbl_click' or fingers == [0,1,1,0,0]):
             pyautogui.doubleClick(button = "left")
+            pass
 
         elif predict_action == 'scrollup':
             pyautogui.scroll(100)
+            pass
 
         elif predict_action == 'scrolldown':
             pyautogui.scroll(-100)
+            pass
         elif predict_action == 'left_arrow':
             if flag : 
                 pyautogui.press('right')
+                pass
                 flag  = False
         elif predict_action == 'right_arrow':
             if flag:
                 pyautogui.press('left')
+                pass
                 flag = False
 
             #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
         else :
             pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
+            pass
             flag = True
-
         
         cTime = time.time()
         fps = 1/(cTime-pTime)

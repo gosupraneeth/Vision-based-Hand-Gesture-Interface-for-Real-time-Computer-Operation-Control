@@ -23,7 +23,7 @@ data = pd.DataFrame(columns=columns)
 #print(data)
 with mp_hands.Hands(
     static_image_mode=True,
-    max_num_hands=2,
+    max_num_hands=1,
     min_detection_confidence=0.5) as hands:
     for class_name in IMAGE_FILES.keys():
         for file in IMAGE_FILES[class_name]:

@@ -29,9 +29,14 @@ def main():
     #from tensorflow import keras
     #loaded_model = keras.models.load_model('./../models/DL_model.h5')
 
+    frameRxs = int(screenWidth*0.1)
+    frameRys = int(screenHeight*0.1)
+    frameRxe = int(screenWidth*0.9)
+    frameRye = int(screenHeight*0.9)
     while True:
-        success, img = cap.read()
+        success, img = cap.read()    
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        cv2.rectangle(img,(frameRxs,frameRye), (frameRxe, frameRys),(255, 0, 255), 2)
         results = hands.process(imgRGB)
         lmlist = []
 
@@ -85,38 +90,30 @@ def main():
 
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
                 img = cv2.flip(img, 1)
+        if(x_cod >= 0.3 and x_cod<=0.7) and (y_cod>=0.3 and y_cod <=0.7):
+            if (predict_action == 'hold_drag') :
+                pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
 
-        if (predict_action == 'hold_drag') :
-            pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
+            elif (predict_action == 'left_click'):
+                pyautogui.click(button="left")
 
-        elif (predict_action == 'left_click'):
-            pyautogui.click(button="left")
+            elif (predict_action == 'right_click'):
+                pyautogui.click(button= 'right')
 
-        elif (predict_action == 'right_click'):
-            pyautogui.click(button= 'right')
+            elif predict_action == 'left_dbl_click':
+                pyautogui.doubleClick(button = "left")
 
-        elif predict_action == 'left_dbl_click':
-            pyautogui.doubleClick(button = "left")
+            elif predict_action == 'scrollup':
+                pyautogui.scroll(100)
 
-        elif predict_action == 'scrollup':
-            pyautogui.scroll(100)
+            elif predict_action == 'scrolldown':
+                pyautogui.scroll(-100)
 
-        elif predict_action == 'scrolldown':
-            pyautogui.scroll(-100)
-        elif predict_action == 'left_arrow':
-            if flag : 
-                pyautogui.press('right')
-                flag  = False
-        elif predict_action == 'right_arrow':
-            if flag:
-                pyautogui.press('left')
-                flag = False
+                #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
 
-            #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
-        else :
-            pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
-            flag = True
-
+            pyautogui.moveTo((1-x_cod)*screenWidth*0.1, y_cod*screenHeight*0.1)
+        else:
+            pass
         
         cTime = time.time()
         fps = 1/(cTime-pTime)
