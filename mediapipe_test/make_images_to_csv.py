@@ -36,6 +36,7 @@ with mp_hands.Hands(
             #print('Handedness:', results.multi_handedness)
             if not results.multi_hand_landmarks:
                 print(file)
+                os.remove(file)
                 continue
 
             image_height, image_width, _ = image.shape
