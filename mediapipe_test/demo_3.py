@@ -25,6 +25,7 @@ def main():
     pTime = 0
     cTime = 0
     cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FPS , 60) 
     mpHands = mp.solutions.hands
     hands = mpHands.Hands(static_image_mode=False,
                         max_num_hands=1,
@@ -33,14 +34,17 @@ def main():
 
     mpDraw = mp.solutions.drawing_utils
     landmarks = ["WRIST","THUMB_CMC","THUMB_MCP","THUMB_IP","THUMB_TIP","INDEX_FINGER_MCP","INDEX_FINGER_PIP","INDEX_FINGER_DIP","INDEX_FINGER_TIP","MIDDLE_FINGER_MCP","MIDDLE_FINGER_PIP","MIDDLE_FINGER_DIP","MIDDLE_FINGER_TIP","RING_FINGER_MCP","RING_FINGER_PIP","RING_FINGER_DIP","RING_FINGER_TIP","PINKY_MCP","PINKY_PIP","PINKY_DIP","PINKY_TIP"]
-    loaded_model = keras.models.load_model('./../models/DL_model_4.h5')
+    loaded_model = keras.models.load_model('./../models/DL_model_3.h5')
     screenWidth, screenHeight = pyautogui.size()
     #from tensorflow import keras
     #loaded_model = keras.models.load_model('./../models/DL_model.h5')
 
     while True:
         success, img = cap.read()
+        width = cap.get(3)
+        height = cap.get(4)
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        #cv2.rectangle(imgRGB, (int(width*0.1),int( height*0.1)), (int(width*0.9),int( height*0.9)),(0, 255, 0), 3)
         results = hands.process(imgRGB)
         lmlist = []
 
@@ -182,7 +186,13 @@ def main():
 
             #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
         else :
-            pyautogui.moveTo((1-x_cod)*screenWidth*1.2, y_cod*screenHeight*1.2)
+            sizew = (1-x_cod)*screenWidth*1.1
+            sizeh =  y_cod*screenHeight*1.1
+            if(sizew >= screenWidth):
+                sizew = (1-x_cod)*screenWidth
+            if(sizeh>= screenHeight):
+                sizeh = y_cod*screenHeight
+            pyautogui.moveTo(sizew, sizeh)
             left_click_flag = False
             right_click_flag = False
             left_dbl_click_flag = False
@@ -197,7 +207,7 @@ def main():
         pTime = cTime
 
 
-        cv2.putText(img,str(int(fps)), (10,70), cv2.FONT_HERSHEY_PLAIN, 3, (255,0,255), 3)
+        cv2.putText(img,str(int(cap.get(cv2.CAP_PROP_FPS))), (10,70), cv2.FONT_HERSHEY_PLAIN, 3, (255,0,255), 3)
         #flipped = cv2.flip(img, 1)
         cv2.imshow("Image",img)
         cv2.waitKey(1)
