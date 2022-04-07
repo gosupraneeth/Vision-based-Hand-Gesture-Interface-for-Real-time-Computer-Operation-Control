@@ -26,7 +26,7 @@ def main():
     #loaded_model = pickle.load(open('./../models/DL_model.sav', 'rb'))
 
     from tensorflow import keras
-    loaded_model = keras.models.load_model('./../models/DL_model_3.h5')
+    loaded_model = keras.models.load_model('./../models/DL_model_4.h5')
 
     while True:
         success, img = cap.read()
