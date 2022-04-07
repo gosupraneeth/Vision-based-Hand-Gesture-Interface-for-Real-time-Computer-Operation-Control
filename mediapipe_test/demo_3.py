@@ -182,7 +182,7 @@ def main():
 
             #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
         else :
-            pyautogui.moveTo((1-x_cod)*screenWidth*1.25, y_cod*screenHeight*1.25)
+            pyautogui.moveTo((1-x_cod)*screenWidth*1.2, y_cod*screenHeight*1.2)
             left_click_flag = False
             right_click_flag = False
             left_dbl_click_flag = False
