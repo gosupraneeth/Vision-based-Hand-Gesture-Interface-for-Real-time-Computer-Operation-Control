@@ -6,14 +6,16 @@ import numpy as np
 import pyautogui
 from tensorflow import keras
 
-left_click_flag = False
-right_click_flag = False
-left_dbl_click_flag = False
-left_arrow_flag = False
-right_arrow_flag = False
-scroll_down_count = 2
-scroll_up_count =2
+
+
 def main():
+    left_click_flag = False
+    right_click_flag = False
+    left_dbl_click_flag = False
+    left_arrow_flag = False
+    right_arrow_flag = False
+    scroll_down_count = 2
+    scroll_up_count =2
     cod_x = ""
     cod_y = ""
     action = ""
@@ -180,7 +182,7 @@ def main():
 
             #pyautogui.dragTo((1-x_cod)*screenWidth, y_cod*screenHeight, button='left')
         else :
-            pyautogui.moveTo((1-x_cod)*screenWidth, y_cod*screenHeight)
+            pyautogui.moveTo((1-x_cod)*screenWidth*1.25, y_cod*screenHeight*1.25)
             left_click_flag = False
             right_click_flag = False
             left_dbl_click_flag = False
