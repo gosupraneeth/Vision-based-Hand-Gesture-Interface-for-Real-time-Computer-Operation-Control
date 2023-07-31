@@ -1,4 +1,4 @@
-# Computer Controlling Operations using Hand Gestures
+# Vision-based Hand Gesture Interface for Real-time Computer Operation Control
 ## How to start
 There three folders names **_models_**, **_main_** and **_model_train_**. 
 In the _models_ folder there are different versions and experimented models. 
